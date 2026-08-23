@@ -126,39 +126,7 @@ f(n) = g(n) + h(n)
 
 ### 4. 自定义路径与 Nav2 Controller 集成
 
-A* 输出最初为栅格路径：
-
-```text
-[(x0, y0), (x1, y1), ..., (xn, yn)]
-```
-
-程序将路径点重新转换为世界坐标，并生成：
-
-```text
-nav_msgs/Path
-```
-
-路径发布到：
-
-```text
-/astar_path
-```
-
-同时根据相邻路径点方向计算每个 Pose 的 `yaw`，再转换为四元数，使路径点朝向与实际前进方向保持一致。
-
-随后创建：
-
-```python
-ActionClient(
-    self,
-    FollowPath,
-    'follow_path'
-)
-```
-
-将自定义 `Path` 发送到 Nav2 Controller Server。
-
-因此最终职责划分为：
+职责划分为：
 
 ```text
 自定义 A*
