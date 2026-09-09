@@ -1,6 +1,6 @@
 # 第4次进度汇报
 
-**时间范围：** 2026年8月28日—2026年9月6日  
+**时间范围：** 2026年8月28日—2026年9月9日  
 **汇报人：** 袁崇皓  
 **当前任务：** 附加任务4 Frontier-based 自主环境探索与统一启动工具完善  
 
@@ -164,6 +164,11 @@ SLAM 地图更新
 
 机器人能够在不手动使用 RViz2 `2D Goal Pose` 的情况下，自主选择目标并连续探索环境。
 
+![附加任务4：Frontier 自主探索过程](../images/extra4_autonomous_exploration.png)
+
+> 图1 附加任务4：TurtleBot3 根据 Frontier 候选点自主选择目标并通过 Nav2 进行导航探索，SLAM 地图在机器人运动过程中持续扩展。
+
+
 ---
 
 #### 1.4 导航失败处理与黑名单机制
@@ -276,6 +281,11 @@ autonomous_exploration_map.pgm
 自动保存地图
 ```
 
+![附加任务4：自主探索最终地图](../images/extra4_final_exploration_map.png)
+
+> 图2 附加任务4：TurtleBot3 完成 Frontier-based 自主环境探索后的最终 SLAM 地图，主要房间、通道与障碍物轮廓已完成建图。
+
+
 ---
 
 ### 2. RViz2 Frontier 可视化
@@ -327,8 +337,21 @@ No executable found
 
 ---
 
+### 2. 大量 Frontier 被识别为一个连续 Cluster
 
-### 2. 探索完成后仍存在少量 Frontier
+现象：
+
+初始检测结果中最大的 Frontier Cluster 包含约 669 个栅格。如果直接取整个 Cluster 的几何中心，目标点可能位于已探索区域内部，不能代表实际探索方向。
+
+处理方式：
+
+在 BFS 聚类基础上增加 Spatial Subdivision，将大 Cluster 进一步按照局部地图区域拆分，并分别生成候选 Frontier。
+
+最终从单个大型 Frontier 中生成多个分散候选点，使机器人能够向不同方向进行探索。
+
+---
+
+### 3. 探索完成后仍存在少量 Frontier
 
 现象：
 
